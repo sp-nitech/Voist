@@ -49,6 +49,7 @@
 
 ### 手順
 1. 前準備
+   1. `cd /path/to/your/eclipse-workspace/`
    1. `git clone https://github.com/sp-nitech/Voist.git`
    1. `CallPortAudio.dll`と`portaudio_x64.dll`がシンボリックリンクになっているか確認する．
    1. `tools`以下にある`make1.bat`を実行する．
