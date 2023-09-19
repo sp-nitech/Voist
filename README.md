@@ -50,50 +50,49 @@
 ### 手順
 1. 前準備
    1. `git clone https://github.com/sp-nitech/Voist.git`
-   1. `CallPortAudio.dll`と`portaudio_x64.dll`がシンボリックリンクになっているか確認する
-   1. `tools`以下にある`make1.bat`を実行する
-   1. `tools/java/jdk-21_windows-x64_bin.exe`を実行してJDKをインストールする（インストール先はデフォルトのまま）
-   1. `tools`以下にある`make2.bat`を実行する
+   1. `CallPortAudio.dll`と`portaudio_x64.dll`がシンボリックリンクになっているか確認する．
+   1. `tools`以下にある`make1.bat`を実行する．
+   1. `tools/java/jdk-21_windows-x64_bin.exe`を実行してJDKをインストールする（インストール先はデフォルトのまま）．
+   1. `tools`以下にある`make2.bat`を実行する．
 1. ASIO SDKをダウンロード
-   1. [Steinberg](https://www.steinberg.net/developers/)からASIO SDKをダウンロードする
-   1. ダウンロードしたzipファイルを解凍する
-   1. 解凍してできたディレクトリを`ASIOSDK`にリネームする
-   1. リネームした`ASIOSDK`を`tools/portaudio/src/hostapi/asio/`に配置する
+   1. [Steinberg](https://www.steinberg.net/developers/)からASIO SDKをダウンロードする．
+   1. ダウンロードしたzipファイルを解凍する．
+   1. 解凍してできたディレクトリを`ASIOSDK`にリネームする．
+   1. リネームした`ASIOSDK`を`tools/portaudio/src/hostapi/asio/`に配置する．
 1. PortAudioをコンパイル
-   1. `tools/portaudio/msvc/portaudio.sln`を開く
-   1. プロジェクトの変換について聞かれるのでOKを押す（警告が出るが無視する）
-   1. ソリューション構成をDebugからReleaseに変更する
-   1. プラットフォームがx64になっているか確認する
-   1. 『プロジェクト』→『プロパティ』→『構成プロパティ』→『C/C++』を選択する
-      1. 『最適化』→『フレームポイントなし』を『はい/(Oy)』にする
-      1. 『コード生成』→『ランタイムライブラリ』を『マルチスレッド(/MT)』にする
-      1. 『コード生成』→『浮動小数点モデル』を『Fast/(fp:fast)』にする
-   1. 『ビルド』→『ソリューションのビルド』を実行する
+   1. `tools/portaudio/msvc/portaudio.sln`を開く．
+   1. プロジェクトの変換について聞かれるのでOKを押す（警告が出るが無視する）．
+   1. ソリューション構成をDebugからReleaseに変更する．
+   1. プラットフォームがx64になっているか確認する．
+   1. 『プロジェクト』→『プロパティ』→『構成プロパティ』→『C/C++』を選択する．
+      1. 『最適化』→『フレームポイントなし』を『はい/(Oy)』にする．
+      1. 『コード生成』→『ランタイムライブラリ』を『マルチスレッド(/MT)』にする．
+      1. 『コード生成』→『浮動小数点モデル』を『Fast/(fp:fast)』にする．
+   1. 『ビルド』→『ソリューションのビルド』を実行する．
 1. CallPortAudioをコンパイル
-   1. `extern/CallPortAudio.sln`を開く
-   1. ソリューション構成をDebugからReleaseに変更する
-   1. プラットフォームがx64になっているか確認する
-   1. 『ビルド』→『ソリューションのビルド』を実行する
+   1. `extern/CallPortAudio.sln`を開く．
+   1. ソリューション構成をDebugからReleaseに変更する．
+   1. プラットフォームがx64になっているか確認する．
+   1. 『ビルド』→『ソリューションのビルド』を実行する．
 1. Voistをコンパイル
-   1. [Eclipse Foundation](https://www.eclipse.org/downloads/)からEclipseのインストーラをダウンロードする
-   1. インストーラを実行してEclipse IDE for Java Developersを選択する
-   1. 『File』→『Open Projects from File System...』から，このリポジトリのルートディレクトリを指定する
-   1. 『Run』→『Run』で動作確認する
+   1. [Eclipse Foundation](https://www.eclipse.org/downloads/)からEclipseのインストーラをダウンロードする．
+   1. インストーラを実行してEclipse IDE for Java Developersを選択する．
+   1. 『File』→『Open Projects from File System...』から，このリポジトリのルートディレクトリを指定する．
+   1. 『Run』→『Run』で動作確認する．
 1. インストーラを作成
-   1. `tools/launch4j/launch4j-3.50-win32.exe`を実行してLaunch4jをインストールする
-   1. `tools/wixedit/WixEdit-0.8.1417.11.msi`を実行してWixEditをインストールする
-   1. 『File』→『Export』→『Java』→『Runnable JAR file』からjarファイルを出力する
+   1. `tools/launch4j/launch4j-3.50-win32.exe`を実行してLaunch4jをインストールする．
+   1. `tools/wixedit/WixEdit-0.8.1417.11.msi`を実行してWixEditをインストールする．
+   1. 『File』→『Export』→『Java』→『Runnable JAR file』からJARファイルを出力する．
       1. Launch configuration: Voist
       1. Export destination: このリポジトリの`package/bin`
-      1. Package required libraries into generated JARにチェックする
-      1. Finish
-   1. Launch4j.exeを起動してjarファイルをexeファイルに変換する
-      1. `package/res/launch4j.config.xml`を開く
-      1. Build wrapperを実行する
-   1. WixEditを起動してインストーラを作成する
-      1. `package/res/wixedit.config.wxs`を開く
-      1. Buildを実行する
-   1. インストーラ`package/bin/Voist.msi`を実行して動作確認する
+      1. Package required libraries into generated JAR: チェック
+   1. Launch4j.exeを起動してJARファイルをEXEファイルに変換する．
+      1. `package/res/launch4j.config.xml`を開く．
+      1. Build wrapper（歯車のボタン）を実行する．
+   1. WixEditを起動してインストーラを作成する．
+      1. `package/res/wixedit.config.wxs`を開く．
+      1. 『Build』→『Build MSI setup package』を実行する．
+   1. インストーラ`package/bin/Voist.msi`を実行して動作確認する．
 
 ## 参考文献
 ```bibtex
