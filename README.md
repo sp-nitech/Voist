@@ -5,7 +5,7 @@
 - このソフトウェアは，円滑な音声収録を目的として，名古屋工業大学徳田研究室により開発されたものです．
 - Windowsのみインストーラを用意していますが，Javaを用いているため，ビルド次第では他のOSで動作できる可能性があります．
 
-# 収録手順
+## 収録手順
 1. メニューの左上にある『ファイル』から『ユーザの変更』を選択して，任意のユーザ名を入力して『変更』ボタンを押します．
    1. PCを共有していない場合，ユーザ名を変える必要はありません．
    1. 音声ファイルは`C:/Users/（Windowsのユーザ名）/Documents/Voist/recording/（ユーザ名）/（プロンプト名）/`以下に保存されます．
@@ -24,7 +24,7 @@
 1. 『次の文へ』ボタンを押して，すべての文を収録するまで同様の操作を繰り返します．
    1. メニューの『表示』→『収録フォルダ』から収録した音声を確認できます．
 
-# Q&A
+## Q&A
 - 収録の成功条件を厳しくしたいです．
   - メニューの『設定』→『音声収録』から所望の設定に変更してください．
 - 漢字の読めない小さな子に読ませたいです．
@@ -41,13 +41,13 @@
   - こちらのソフトウェアは音声収録のみを目的としています．
   - [HTS](https://hts.sp.nitech.ac.jp/)や[ESPnet](https://github.com/espnet/espnet)等のソフトウェアをご利用ください．
 
-# 開発環境の構築（開発者向け）
+## 開発環境の構築（開発者向け）
 
-## 要件
+### 要件
 - [Visual Studio 2022](https://visualstudio.microsoft.com/ja/vs/)
 - [.NET framework 2.0](https://www.microsoft.com/ja-jp/download/details.aspx?id=25150) (for WixEdit)
 
-## 手順
+### 手順
 1. 前準備
    1. `git clone https://github.com/sp-nitech/Voist.git`
    1. `CallPortAudio.dll`と`portaudio_x64.dll`がシンボリックリンクになっているか確認する
@@ -95,7 +95,7 @@
       1. Buildを実行する
    1. インストーラ`package/bin/Voist.msi`を実行して動作確認する
 
-# 参考文献
+## 参考文献
 ```bibtex
 @InProceedings{sp-nitech2016voist,
   author = {吉村建慶 and 橋本佳 and 大浦圭一郎 and 南角吉彦 and 徳田恵一},
