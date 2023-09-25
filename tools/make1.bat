@@ -12,6 +12,7 @@ if not exist java (
     pushd java
     curl -OL https://download.oracle.com/java/21/latest/jdk-21_windows-x64_bin.exe
     curl -OL https://repo1.maven.org/maven2/javax/activation/activation/1.1.1/activation-1.1.1.jar
+    curl -OL https://github.com/google/google-java-format/releases/download/v1.17.0/google-java-format-1.17.0-all-deps.jar
     popd
 )
 

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="prompts">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="prompt" type="promptType" minOccurs="1" maxOccurs="16384"/>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="promptType">
+    <xs:all>
+      <xs:element name="copyright" type="xs:string"/>
+      <xs:element name="language" type="xs:string"/>
+      <xs:element name="content" type="contentType"/>
+      <xs:element name="style" type="xs:string"/>
+      <xs:element name="db" type="xs:string"/>
+      <xs:element name="id" type="nonemptyString"/>
+      <xs:element name="script" type="nonemptyString"/>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:simpleType name="nonemptyString">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="contentType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="talk"/>
+      <xs:enumeration value="song"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

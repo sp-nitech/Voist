@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<prompts>
+  <prompt>
+    <copyright></copyright>
+    <language>ja_JP</language>
+    <content>talk</content>
+    <style>normal</style>
+    <db>setups</db>
+    <id>01</id>
+    <script>こちらが/読@よ/み/上@あ/げる/文@ぶん/となります．</script>
+  </prompt>
+  <prompt>
+    <copyright></copyright>
+    <language>ja_JP</language>
+    <content>talk</content>
+    <style>normal</style>
+    <db>setups</db>
+    <id>02</id>
+    <script>こちらが/読@よ/み/上@あ/げる/文@ぶん/となります．</script>
+  </prompt>
+</prompts>
