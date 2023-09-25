@@ -79,7 +79,9 @@
    1. 『ビルド』→『ソリューションのビルド』を実行する．
 1. Voistをコンパイル
    1. [Eclipse Foundation](https://www.eclipse.org/downloads/)からEclipseのインストーラをダウンロードする．
-   1. インストーラを実行してEclipse IDE for Java Developersを選択する．
+   1. インストーラを実行する．
+   1. Eclipse IDE for Java Developersを選択して，そのままINSTALLボタンを押す．
+   1. Eclipseを起動する．Workspaceは任意で良い．
    1. 『File』→『Open Projects from File System...』から，このリポジトリのルートディレクトリを指定する．
    1. 『Run』→『Run』で動作確認する．
 1. インストーラを作成
