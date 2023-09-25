@@ -85,15 +85,15 @@
    1. 『File』→『Open Projects from File System...』から，このリポジトリのルートディレクトリを指定する．
    1. 『Run』→『Run』で動作確認する．
 1. インストーラを作成
-   1. `tools/launch4j/launch4j-3.50-win32.exe`を実行してLaunch4jをインストールする．
-   1. `tools/wixedit/WixEdit-0.8.1417.11.msi`を実行してWixEditをインストールする．
-   1. 『File』→『Export』→『Java』→『Runnable JAR file』からJARファイルを出力する．
+   1. Eclipseの『File』→『Export』→『Java』→『Runnable JAR file』からJARファイルを出力する．
       1. Launch configuration: Voist
-      1. Export destination: このリポジトリの`package/bin`
+      1. Export destination: `Voist/package/bin/Voist.jar`
       1. Package required libraries into generated JAR: チェック
+   1. `tools/launch4j/launch4j-3.50-win32.exe`を実行してLaunch4jをインストールする．
    1. Launch4j.exeを起動してJARファイルをEXEファイルに変換する．
       1. `package/res/launch4j.config.xml`を開く．
       1. Build wrapper（歯車のボタン）を実行する．
+   1. `tools/wixedit/WixEdit-0.8.1417.11.msi`を実行してWixEditをインストールする．
    1. WixEditを起動してインストーラを作成する．
       1. `package/res/wixedit.config.wxs`を開く．
       1. 『Build』→『Build MSI setup package』を実行する．
