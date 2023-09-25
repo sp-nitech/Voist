@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CallPortAudio", "CallPortAudio\CallPortAudio.vcxproj", "{21728859-B09C-49F6-AC92-FF10D35FF5F8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{21728859-B09C-49F6-AC92-FF10D35FF5F8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{21728859-B09C-49F6-AC92-FF10D35FF5F8}.Debug|Win32.Build.0 = Debug|Win32
+		{21728859-B09C-49F6-AC92-FF10D35FF5F8}.Debug|x64.ActiveCfg = Debug|x64
+		{21728859-B09C-49F6-AC92-FF10D35FF5F8}.Debug|x64.Build.0 = Debug|x64
+		{21728859-B09C-49F6-AC92-FF10D35FF5F8}.Release|Win32.ActiveCfg = Release|Win32
+		{21728859-B09C-49F6-AC92-FF10D35FF5F8}.Release|Win32.Build.0 = Release|Win32
+		{21728859-B09C-49F6-AC92-FF10D35FF5F8}.Release|x64.ActiveCfg = Release|x64
+		{21728859-B09C-49F6-AC92-FF10D35FF5F8}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3A1CD387-FD42-455C-94EC-7AC61887611F}
+	EndGlobalSection
+EndGlobal
