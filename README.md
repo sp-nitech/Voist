@@ -53,9 +53,9 @@
 1. 前準備
    1. `git clone https://github.com/sp-nitech/Voist.git`
    1. `CallPortAudio.dll`と`portaudio_x64.dll`がシンボリックリンクになっているか確認する．
-   1. `tools`以下にある`make1.bat`を実行する．
+   1. `tools/`以下にある`make1.bat`を実行する．
    1. `tools/java/jdk-21_windows-x64_bin.exe`を実行してJDKをインストールする（インストール先はデフォルトのまま）．
-   1. `tools`以下にある`make2.bat`を実行する．
+   1. `tools/`以下にある`make2.bat`を実行する．
 1. ASIO SDKをダウンロード
    1. [Steinberg](https://www.steinberg.net/developers/)からASIO SDKをダウンロードする．
    1. ダウンロードしたzipファイルを解凍する．
@@ -85,7 +85,7 @@
    1. 『File』→『Open Projects from File System...』から，このリポジトリのルートディレクトリを指定する．
    1. 『Run』→『Run』で動作確認する．
 1. インストーラを作成
-   1. Eclipseの『File』→『Export』→『Java』→『Runnable JAR file』からJARファイルを出力する．
+   1. Eclipseの『File』→『Export...』→『Java』→『Runnable JAR file』からJARファイルを出力する．
       1. Launch configuration: Voist
       1. Export destination: `Voist/package/bin/Voist.jar`
       1. Package required libraries into generated JAR: チェック
@@ -98,6 +98,9 @@
       1. `package/res/wixedit.config.wxs`を開く．
       1. 『Build』→『Build MSI setup package』を実行する．
    1. インストーラ`package/bin/Voist.msi`を実行して動作確認する．
+1. 後処理
+   1. `tools/llvm/LLVM-17.0.1-win64.exe`を実行して`clang-format`をインストールする．
+   1. `tools/`以下にある`format.bat`を実行する． 
 
 ## 参考文献
 ```bibtex
