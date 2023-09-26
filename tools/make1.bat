@@ -38,4 +38,11 @@ if not exist wixedit (
     popd
 )
 
+if not exist llvm (
+    mkdir llvm
+    pushd llvm
+    curl -OL https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.1/LLVM-17.0.1-win64.exe
+    popd
+)
+
 pause
