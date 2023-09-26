@@ -86,7 +86,7 @@
    1. 『Run』→『Run』で動作確認する．
 1. インストーラを作成
    1. Eclipseの『File』→『Export...』→『Java』→『Runnable JAR file』からJARファイルを出力する．
-      1. Launch configuration: Voist
+      1. Launch configuration: `Voist`
       1. Export destination: `Voist/package/bin/Voist.jar`
       1. Package required libraries into generated JAR: チェック
    1. `tools/launch4j/launch4j-3.50-win32.exe`を実行してLaunch4jをインストールする．
