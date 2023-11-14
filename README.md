@@ -34,6 +34,7 @@
   - 20秒です．
 - サンプリング周波数を変更したいです．
   - `res/properties/system.Voist.properties`の`SAMPLE_RATE`を変更してください．
+  - 1000Hz ～ 96000Hzまで対応しています．
 - ビットレートを変更したいです．
   - `res/properties/system.Voist.properties`の`SAMPLE_SIZE`を変更してください．
   - 2 (16bit), 3 (24bit), 4 (32bit)のみ対応しています．
