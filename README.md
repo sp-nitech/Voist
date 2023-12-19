@@ -37,7 +37,7 @@
   - 1000Hz ～ 96000Hzまで対応しています．
 - ビットレートを変更したいです．
   - `res/properties/system.Voist.properties`の`SAMPLE_SIZE`を変更してください．
-  - 2 (16bit), 3 (24bit), 4 (32bit)のみ対応しています．
+  - 2 (16bit), 3 (24bit), 4 (32bit)のみ対応しています．すべて整数型です．
 - サンプル再生ボタンを隠したいです．
   - `res/properties/system.Buttons.properties`の`USE_SAMPLE`を`false`にしてください．
 - 音声合成器を作りたいです．
