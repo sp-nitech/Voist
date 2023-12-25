@@ -37,10 +37,10 @@
 - 一文当たりの録音の最大時間は何秒ですか．
   - 20秒です．
 - サンプリング周波数を変更したいです．
-  - `res/properties/system.Voist.properties`の`SAMPLE_RATE`を変更してください．
+  - インストールされた`Voist/res/properties/system.Voist.properties`の`SAMPLE_RATE`を変更してください．
   - 1000Hz ～ 96000Hzまで対応しています．
 - ビットレートを変更したいです．
-  - `res/properties/system.Voist.properties`の`SAMPLE_SIZE`を変更してください．
+  - インストールされた`Voist/res/properties/system.Voist.properties`の`SAMPLE_SIZE`を変更してください．
   - 2 (16bit), 3 (24bit), 4 (32bit)のみ対応しています．すべて整数型です．
 - サンプル再生ボタンを隠したいです．
   - `res/properties/system.Buttons.properties`の`USE_SAMPLE`を`false`にしてください．
