@@ -3,7 +3,7 @@
 if not exist portaudio (
     git clone https://github.com/PortAudio/portaudio.git
     pushd portaudio
-    git checkout 67ead0a57ffacc3ac354fa54e4aac5df247fd531
+    git checkout c1214824ab5b8e2229654aa737e7435782fd56d9
     popd
 )
 
@@ -12,15 +12,15 @@ if not exist java (
     pushd java
     curl -OL https://download.oracle.com/java/21/latest/jdk-21_windows-x64_bin.exe
     curl -OL https://repo1.maven.org/maven2/javax/activation/activation/1.1.1/activation-1.1.1.jar
-    curl -OL https://github.com/google/google-java-format/releases/download/v1.17.0/google-java-format-1.17.0-all-deps.jar
+    curl -OL https://github.com/google/google-java-format/releases/download/v1.23.0/google-java-format-1.23.0-all-deps.jar
     popd
 )
 
 if not exist ant (
     mkdir ant
     pushd ant
-    curl -OL https://dlcdn.apache.org//ant/binaries/apache-ant-1.10.14-bin.zip
-    powershell -command "Expand-Archive -Path apache-ant-1.10.14-bin.zip" .
+    curl -OL https://dlcdn.apache.org//ant/binaries/apache-ant-1.10.15-bin.zip
+    powershell -command "Expand-Archive -Path apache-ant-1.10.15-bin.zip" .
     popd
 )
 
@@ -34,14 +34,14 @@ if not exist launch4j (
 if not exist wixedit (
     mkdir wixedit
     pushd wixedit
-    curl -OL https://github.com/WixEdit/WixEdit/releases/download/v0.8.1417.11/WixEdit-0.8.1417.11.msi
+    curl -OL https://github.com/WixEdit/WixEdit/releases/download/v0.8.2712.17/WixEdit-0.8.2712.17.msi
     popd
 )
 
 if not exist llvm (
     mkdir llvm
     pushd llvm
-    curl -OL https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.1/LLVM-17.0.1-win64.exe
+    curl -OL https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.0/LLVM-19.1.0-win64.exe
     popd
 )
 

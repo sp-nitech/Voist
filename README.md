@@ -86,20 +86,21 @@
    1. 『Run』→『Run』で動作確認する．
 1. インストーラを作成
    1. Eclipseの『File』→『Export...』→『Java』→『Runnable JAR file』からJARファイルを出力する．
-      1. Launch configuration: `Voist`
+      1. Launch configuration: `Voist - Voist`
       1. Export destination: `Voist/package/bin/Voist.jar`
       1. Package required libraries into generated JAR: チェック
    1. `tools/launch4j/launch4j-3.50-win32.exe`を実行してLaunch4jをインストールする．
    1. Launch4j.exeを起動してJARファイルをEXEファイルに変換する．
       1. `package/res/launch4j.config.xml`を開く．
       1. Build wrapper（歯車のボタン）を実行する．
-   1. `tools/wixedit/WixEdit-0.8.1417.11.msi`を実行してWixEditをインストールする．
+   1. `tools/wixedit/WixEdit-0.8.2712.17.msi`を実行してWixEditをインストールする．
    1. WixEditを起動してインストーラを作成する．
       1. `package/res/wixedit.config.wxs`を開く．
       1. 『Build』→『Build MSI setup package』を実行する．
    1. インストーラ`package/bin/Voist.msi`を実行して動作確認する．
 1. 後処理
-   1. `tools/llvm/LLVM-17.0.1-win64.exe`を実行して`clang-format`をインストールする．
+   1. `tools/llvm/LLVM-19.1.0-win64.exe`を実行して`clang-format`をインストールする．
+   1. パスが通っているか（環境変数Pathに`C:\Program Files\LLVM\bin`があるか）をチェックする．
    1. `tools/`以下にある`format.bat`を実行する． 
 
 ## 参考文献
