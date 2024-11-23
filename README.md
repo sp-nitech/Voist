@@ -103,7 +103,7 @@
       1. Build wrapper（歯車のボタン）を実行する．
    1. `tools/wixedit/WixEdit-0.8.2712.17.msi`を実行してWixEditをインストールする．
    1. WixEditを起動してインストーラを作成する．
-      1. `package/res/wixedit.config.wxs`を開く．
+      1. `package/res/Voist.wxs`を開く．
       1. 『Build』→『Build MSI setup package』を実行する．
    1. インストーラ`package/bin/Voist.msi`を実行して動作確認する．
 1. 後処理
