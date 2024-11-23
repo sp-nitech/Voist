@@ -7,7 +7,7 @@
     lightArgs: "../bin/<projectname>.wixobj" -ext WixUIExtension -cultures:ja-jp -out "../bin/<projectname>.msi"
 -->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-    <Product Id="B0D4160E-77C0-4C45-A476-86A44E37BDAF" Name="Voist" Language="1041" Version="1.0.2309.25" Manufacturer="Tokuda and Nankaku lab." UpgradeCode="98C9D87C-C634-4208-9AC9-70F9D32EC6D3" Codepage="932">
+    <Product Id="B0D4160E-77C0-4C45-A476-86A44E37BDAF" Name="Voist" Language="1041" Version="1.0.2411.25" Manufacturer="Tokuda and Nankaku lab." UpgradeCode="98C9D87C-C634-4208-9AC9-70F9D32EC6D3" Codepage="932">
         <Package Description="Voice recroder used for voice banking." Comments="This installer database contains the logic and data required to install Voist." InstallerVersion="200" Compressed="yes" SummaryCodepage="932" />
         <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" />
         <Directory Id="TARGETDIR" Name="SourceDir">
