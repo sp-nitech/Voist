@@ -196,10 +196,13 @@ public class Voist implements ButtonEventListener, MenuEventListener {
     audio = new Audio();
     audio.setSampleRate(systemProperties.getInteger("SAMPLE_RATE"));
     audio.setSampleSize(systemProperties.getInteger("SAMPLE_SIZE"));
+    audio.setNumChannels(systemProperties.getInteger("NUM_CHANNELS"));
     audio.setSampleRateForBeep(systemProperties.getInteger("SAMPLE_RATE_FOR_BEEP"));
     audio.setSampleSizeForBeep(systemProperties.getInteger("SAMPLE_SIZE_FOR_BEEP"));
+    audio.setNumChannelsForBeep(systemProperties.getInteger("NUM_CHANNELS_FOR_BEEP"));
     audio.setSampleRateForSample(systemProperties.getInteger("SAMPLE_RATE_FOR_SAMPLE"));
     audio.setSampleSizeForSample(systemProperties.getInteger("SAMPLE_SIZE_FOR_SAMPLE"));
+    audio.setNumChannelsForSample(systemProperties.getInteger("NUM_CHANNELS_FOR_SAMPLE"));
     audio.setMarginTime(systemProperties.getInteger("MARGIN_TIME_MILLI_SECONDS"));
     audio.setSilenceLevel(
         systemProperties.getDouble("VAD_LEVEL_" + user.getProperties().get("VAD_LEVEL")));
@@ -212,6 +215,7 @@ public class Voist implements ButtonEventListener, MenuEventListener {
             systemProperties.getString("PROPERTIES_RECORDINFODIALOG"),
             systemProperties.getInteger("SAMPLE_RATE"),
             systemProperties.getInteger("SAMPLE_SIZE"),
+            systemProperties.getInteger("NUM_CHANNELS"),
             icon);
 
     recSet =
@@ -223,7 +227,8 @@ public class Voist implements ButtonEventListener, MenuEventListener {
             FileUtils.createPath(
                 PlatformUtils.getAppDirectory(systemProperties.getString("APP_NAME"))),
             systemProperties.getInteger("SAMPLE_RATE"),
-            systemProperties.getInteger("SAMPLE_SIZE"));
+            systemProperties.getInteger("SAMPLE_SIZE"),
+            systemProperties.getInteger("NUM_CHANNELS"));
     recSet.setUserName(user.getName());
     changePromptSet(systemProperties.getString("DEFAULT_PROMPT_SET"), true);
 
@@ -341,6 +346,8 @@ public class Voist implements ButtonEventListener, MenuEventListener {
               "] ",
               String.valueOf(recSet.getSampleRate() / 1000),
               "kHz / ",
+              String.valueOf(recSet.getNumChannels()),
+              "ch / ",
               String.valueOf(recSet.getSampleSize() * 8),
               "bit"));
     }
@@ -1217,7 +1224,8 @@ public class Voist implements ButtonEventListener, MenuEventListener {
                 recSet.getRecordingDirectoryName(PlaybackEvent.VOICE_CUT), recSet.getFileName()),
             (int) log.getFileLength(),
             recSet.getPromptID(),
-            systemProperties.getInteger("SAMPLE_SIZE"));
+            systemProperties.getInteger("SAMPLE_SIZE"),
+            systemProperties.getInteger("NUM_CHANNELS"));
       } else {
         guidance.setText(
             systemProperties.getString("INSTRUCTION_TEXT_WAVEFORM_CANNOT_SHOW"), 1, false);

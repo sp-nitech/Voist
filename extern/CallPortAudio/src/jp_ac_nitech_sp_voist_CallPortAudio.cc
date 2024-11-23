@@ -47,10 +47,12 @@ class CallPortAudio {
         sample_size_(3),
         sample_size_for_beep_(3),
         sample_size_for_sample_(2),
+        num_channels_(1),
+        num_channels_for_beep_(1),
+        num_channels_for_sample_(1),
         frame_length_(25),
         frame_shift_(5),
         frames_per_buffer_(1024),
-        num_channels_(1),
         max_recording_time_(20000),
         min_top_silence_(400),
         min_end_silence_(600),
@@ -88,6 +90,18 @@ class CallPortAudio {
     sample_size_for_sample_ = size;
   }
 
+  void SetNumChannels(int num) {
+    num_channels_ = num;
+  }
+
+  void SetNumChannelsForBeep(int num) {
+    num_channels_for_beep_ = num;
+  }
+
+  void SetNumChannelsForSample(int num) {
+    num_channels_for_sample_ = num;
+  }
+
   void SetFrameLength(int time) {
     frame_length_ = time;
   }
@@ -98,10 +112,6 @@ class CallPortAudio {
 
   void SetFramesPerBuffer(int num) {
     frames_per_buffer_ = num;
-  }
-
-  void SetNumChannels(int num) {
-    num_channels_ = num;
   }
 
   void SetMaxRecordingTime(int time) {
@@ -148,6 +158,18 @@ class CallPortAudio {
     return sample_size_for_sample_;
   }
 
+  int GetNumChannels() const {
+    return num_channels_;
+  }
+
+  int GetNumChannelsForBeep() const {
+    return num_channels_for_beep_;
+  }
+
+  int GetNumChannelsForSample() const {
+    return num_channels_for_sample_;
+  }
+
   int GetFrameLength() const {
     return frame_length_;
   }
@@ -158,10 +180,6 @@ class CallPortAudio {
 
   int GetFramesPerBuffer() const {
     return frames_per_buffer_;
-  }
-
-  int GetNumChannels() {
-    return num_channels_;
   }
 
   int GetMaxRecordingTime() const {
@@ -207,7 +225,8 @@ class CallPortAudio {
 
     PaStream *stream;
     error = Pa_OpenStream(&stream, &parameters, NULL, sample_rate_,
-                          frames_per_buffer_, paClipOff, NULL, NULL);
+                          num_channels_ * frames_per_buffer_, paClipOff, NULL,
+                          NULL);
     if (error != paNoError) {
       Terminate(error, 0030, NULL);
       return false;
@@ -220,9 +239,9 @@ class CallPortAudio {
     }
 
     // Allocate memory.
-    const int max_frame(sample_rate_ * max_recording_time_ / 1000 *
-                        num_channels_);
-    record_data_ = static_cast<int *>(std::malloc(sizeof(int) * max_frame));
+    const int max_frame(sample_rate_ * max_recording_time_ / 1000);
+    record_data_ = static_cast<int *>(
+        std::malloc(sizeof(int) * max_frame * num_channels_));
     if (record_data_ == NULL) {
       std::cerr << "Cannot allocate memory to record voice" << std::endl;
       Terminate(NULL);
@@ -230,7 +249,7 @@ class CallPortAudio {
     }
 
     // Initialize.
-    std::memset(record_data_, 0, sizeof(int) * max_frame);
+    std::memset(record_data_, 0, sizeof(int) * max_frame * num_channels_);
     frame_ = 0;
 
     std::cout << "*** Start Recording ***" << std::endl << std::endl;
@@ -238,38 +257,60 @@ class CallPortAudio {
     const jclass j_class(env->GetObjectClass(obj));
     const jfieldID j_field(env->GetFieldID(j_class, "level", "I"));
 
-    int buffer;
+    char *buffer(
+        static_cast<char *>(std::malloc(sample_size_ * num_channels_)));
+    if (buffer == NULL) {
+      std::cerr << "Cannot allocate memory for buffer" << std::endl;
+      Terminate(record_data_);
+      return false;
+    }
+
     open_ = true;
 
     while (open_) {
-      error = Pa_ReadStream(stream, &buffer, 1);
+      error = Pa_ReadStream(stream, buffer, 1);
       if (error != paNoError) {
+        std::free(buffer);
         Terminate(error, 0050, record_data_);
         return false;
       }
 
-      if (sample_size_ == 2) {
-        Int16ToInt(&buffer, &buffer);
-      } else if (sample_size_ == 3) {
-        Int24ToInt(&buffer, &buffer);
-      } else if (sample_size_ == 4) {
-        // nothing to do
-      } else {
-        Terminate(error, 0055, record_data_);
-        return false;
+      bool wrote(false);
+      int sum(0);
+      for (int i(0); i < num_channels_; ++i) {
+        // Convert from x-byte to 4-byte integer.
+        int value(0);
+        if (sample_size_ == 2) {
+          value = Int16ToInt(buffer + sample_size_ * i);
+        } else if (sample_size_ == 3) {
+          value = Int24ToInt(buffer + sample_size_ * i);
+        } else if (sample_size_ == 4) {
+          value = Int32ToInt(buffer + sample_size_ * i);
+        } else {
+          std::free(buffer);
+          Terminate(error, 0055, record_data_);
+          return false;
+        }
+
+        // Record.
+        if (record_ && frame_ < max_frame) {
+          record_data_[num_channels_ * frame_ + i] = value;
+          wrote = true;
+        }
+
+        sum += value;
       }
+      if (wrote) ++frame_;
 
       // Get sound level.
-      const int level(abs(buffer));
+      const int level(
+          static_cast<int>(std::abs(static_cast<double>(sum) / num_channels_)));
       if (env->GetIntField(obj, j_field) < level) {
         env->SetIntField(obj, j_field, level);
       }
-
-      // Record.
-      if (record_ && frame_ < max_frame) {
-        record_data_[frame_++] = buffer;
-      }
     }
+
+    std::free(buffer);
 
     error = Pa_CloseStream(stream);
     if (error != paNoError) {
@@ -297,19 +338,24 @@ class CallPortAudio {
 
     int sample_rate;
     int sample_size;
+    int num_channels;
     if (event == Beep) {
       sample_rate = sample_rate_for_beep_;
       sample_size = sample_size_for_beep_;
+      num_channels = num_channels_for_beep_;
     } else if (event == Sample) {
       sample_rate = sample_rate_for_sample_;
       sample_size = sample_size_for_sample_;
+      num_channels = num_channels_for_sample_;
     } else {
       sample_rate = sample_rate_;
       sample_size = sample_size_;
+      num_channels = num_channels_;
     }
 
     std::cout << "  Sample rate: " << sample_rate << std::endl;
     std::cout << "  Sample size: " << sample_size << std::endl;
+    std::cout << "  Channels: " << num_channels << std::endl;
 
     PaError error;
     error = Pa_Initialize();
@@ -324,15 +370,16 @@ class CallPortAudio {
       Terminate(error, 0120, NULL);
       return false;
     }
-    parameters.channelCount = num_channels_;
+    parameters.channelCount = num_channels;
     parameters.sampleFormat = GetSampleFormat(sample_size);
     parameters.suggestedLatency =
         Pa_GetDeviceInfo(parameters.device)->defaultLowOutputLatency;
     parameters.hostApiSpecificStreamInfo = NULL;
 
     PaStream *stream;
-    error = Pa_OpenStream(&stream, NULL, &parameters, sample_rate,
-                          frames_per_buffer_, paClipOff, NULL, NULL);
+    error =
+        Pa_OpenStream(&stream, NULL, &parameters, sample_rate,
+                      num_channels * frames_per_buffer_, paClipOff, NULL, NULL);
     if (error != paNoError) {
       Terminate(error, 0130, NULL);
       return false;
@@ -343,9 +390,6 @@ class CallPortAudio {
       Terminate(error, 0140, NULL);
       return false;
     }
-
-    // Initialize.
-    int frame(0);
 
     // Open file.
     const char *file(env->GetStringUTFChars(file_name, 0));
@@ -359,13 +403,20 @@ class CallPortAudio {
     std::cout << "  Playback: " << file << std::endl;
 
     // Playback.
-    int buffer;
+    char *buffer(static_cast<char *>(std::malloc(sample_size * num_channels)));
+    if (buffer == NULL) {
+      std::cerr << "Cannot allocate memory for buffer" << std::endl;
+      std::fclose(fp);
+      Terminate(NULL);
+      return false;
+    }
+
     playback_ = true;
-    while (std::fread(&buffer, num_channels_ * sample_size, 1, fp)) {
-      error = Pa_WriteStream(stream, &buffer, 1);
+    while (num_channels == std::fread(buffer, sample_size, num_channels, fp)) {
+      error = Pa_WriteStream(stream, buffer, 1);
       if (error != paNoError) {
         std::fclose(fp);
-        Terminate(error, 0160, NULL);
+        Terminate(error, 0160, buffer);
         break;
       }
       if (!playback_) {
@@ -373,6 +424,7 @@ class CallPortAudio {
       }
     }
     playback_ = false;
+    std::free(buffer);
 
     std::fclose(fp);
 
@@ -415,8 +467,8 @@ class CallPortAudio {
       return false;
     }
     std::cout << "  Writing data to " << org_file << " " << frame_ << std::endl;
-    for (int i(0); i < frame_; ++i) {
-      std::fwrite(&record_data_[i], num_channels_ * sample_size_, 1, org_fp);
+    for (int i(0); i < frame_ * num_channels_; ++i) {
+      std::fwrite(&record_data_[i], sample_size_, 1, org_fp);
     }
     std::fclose(org_fp);
 
@@ -427,15 +479,19 @@ class CallPortAudio {
     for (int i(0); i + frame_length_pt < frame_; i += frame_shift_pt) {
       double sqr(0.0);
       for (int j(i); j < i + frame_length_pt; ++j) {
-        sqr += static_cast<double>(record_data_[j]) * record_data_[j];
+        for (int k(0); k < num_channels_; ++k) {
+          int l(num_channels_ * j + k);
+          sqr += static_cast<double>(record_data_[l]) * record_data_[l];
+        }
       }
-      const double rms(std::sqrt(sqr / frame_length_pt));
+      const double rms(std::sqrt(sqr / frame_length_pt / num_channels_));
       if (rms > max_rms) {
         max_rms = rms;
       }
     }
 
-    int *normalized_data(static_cast<int *>(std::malloc(sizeof(int) * frame_)));
+    int *normalized_data(
+        static_cast<int *>(std::malloc(sizeof(int) * frame_ * num_channels_)));
     if (normalized_data == NULL) {
       std::cerr << "Cannot allocate memory to write normalized data"
                 << std::endl;
@@ -448,13 +504,13 @@ class CallPortAudio {
     const double scale((environment || max_rms == 0.0)
                            ? 1.0
                            : max_normalized_amplitude / max_rms);
-    for (int i(0); i < frame_; ++i) {
+    for (int i(0); i < frame_ * num_channels_; ++i) {
       normalized_data[i] = static_cast<int>(scale * record_data_[i]);
     }
 
     // Set maximum amplitude ratio.
     int max(0);
-    for (int i(0); i < frame_; ++i) {
+    for (int i(0); i < frame_ * num_channels_; ++i) {
       int amplitude(std::abs(record_data_[i]));
       if (amplitude > max) {
         max = amplitude;
@@ -481,9 +537,12 @@ class CallPortAudio {
       for (; f + frame_length_pt < frame_; f += frame_shift_pt) {
         double sqr(0.0);
         for (int i(f); i < f + frame_length_pt; ++i) {
-          sqr += static_cast<double>(normalized_data[i]) * normalized_data[i];
+          for (int k(0); k < num_channels_; ++k) {
+            int l(num_channels_ * i + k);
+            sqr += static_cast<double>(normalized_data[l]) * normalized_data[l];
+          }
         }
-        if (std::sqrt(sqr / frame_length_pt) > silence_rms) {
+        if (std::sqrt(sqr / frame_length_pt / num_channels_) > silence_rms) {
           break;
         }
       }
@@ -508,9 +567,12 @@ class CallPortAudio {
       for (; f - frame_length_pt >= 0; f -= frame_shift_pt) {
         double sqr = 0.0;
         for (int i(f); i > f - frame_length_pt; --i) {
-          sqr += static_cast<double>(normalized_data[i]) * normalized_data[i];
+          for (int k(0); k < num_channels_; ++k) {
+            int l(num_channels_ * i + k);
+            sqr += static_cast<double>(normalized_data[l]) * normalized_data[l];
+          }
         }
-        if (std::sqrt(sqr / frame_length_pt) > silence_rms) {
+        if (std::sqrt(sqr / frame_length_pt / num_channels_) > silence_rms) {
           break;
         }
       }
@@ -532,10 +594,15 @@ class CallPortAudio {
     // Set power.
     double sqr(0.0);
     for (int i(top_speech); i < end_speech; ++i) {
-      sqr += static_cast<double>(record_data_[i]) * record_data_[i];
+      for (int k(0); k < num_channels_; ++k) {
+        int l(num_channels_ * i + k);
+        sqr += static_cast<double>(record_data_[l]) * record_data_[l];
+      }
     }
     j_field = env->GetFieldID(j_class, "power", "D");
-    env->SetDoubleField(obj, j_field, 10.0 * std::log10(sqr / frame_));
+    env->SetDoubleField(
+        obj, j_field,
+        10.0 * std::log10(sqr / (end_speech - top_speech) / num_channels_));
 
     // Write normalized data.
     const char *cut_file(env->GetStringUTFChars(cut_file_name, 0));
@@ -547,8 +614,8 @@ class CallPortAudio {
     }
     std::cout << "  Writing data to " << cut_file << " " << end_file
               << std::endl;
-    for (int i(top_file); i < end_file; ++i) {
-      std::fwrite(&normalized_data[i], num_channels_ * sample_size_, 1, cut_fp);
+    for (int i(top_file * num_channels_); i < end_file * num_channels_; ++i) {
+      std::fwrite(&normalized_data[i], sample_size_, 1, cut_fp);
     }
     std::fclose(cut_fp);
 
@@ -560,7 +627,7 @@ class CallPortAudio {
   }
 
  private:
-  void Terminate(int *data) const {
+  void Terminate(void *data) const {
     if (data) {
       std::free(data);
       data = NULL;
@@ -568,7 +635,7 @@ class CallPortAudio {
     Pa_Terminate();
   }
 
-  void Terminate(PaError error, int error_code, int *data) const {
+  void Terminate(PaError error, int error_code, void *data) const {
     std::cerr << "Error in PortAudio" << std::endl;
     std::cerr << "  Error number: " << error << std::endl;
     std::cerr << "  Error message: " << Pa_GetErrorText(error) << std::endl;
@@ -591,22 +658,26 @@ class CallPortAudio {
     }
   }
 
-  void Int16ToInt(void *x1, void *x2) const {
-    int y(*(static_cast<int *>(x1)) & 0x0000FFFF);
+  int Int16ToInt(void *x) const {
+    int y(*(static_cast<int *>(x)) & 0x0000FFFF);
     if (y >> 15 == 1) {
       y = y | 0xFFFF0000;
     }
     long long xl(y);
-    *(static_cast<int *>(x2)) = static_cast<int>(xl);
+    return static_cast<int>(xl);
   }
 
-  void Int24ToInt(void *x1, void *x2) const {
-    int y(*(static_cast<int *>(x1)) & 0x00FFFFFF);
+  int Int24ToInt(void *x) const {
+    int y(*(static_cast<int *>(x)) & 0x00FFFFFF);
     if (y >> 23 == 1) {
       y = y | 0xFF000000;
     }
     long long xl(y);
-    *(static_cast<int *>(x2)) = static_cast<int>(xl);
+    return static_cast<int>(xl);
+  }
+
+  int Int32ToInt(void *x) const {
+    return *(static_cast<int *>(x));
   }
 
   int *record_data_;
@@ -618,10 +689,12 @@ class CallPortAudio {
   int sample_size_;  // [byte]
   int sample_size_for_beep_;
   int sample_size_for_sample_;
-  int frame_length_;  // [msec]
-  int frame_shift_;   // [msec]
-  int frames_per_buffer_;
-  int num_channels_;
+  int num_channels_;  // [ch]
+  int num_channels_for_beep_;
+  int num_channels_for_sample_;
+  int frame_length_;        // [msec]
+  int frame_shift_;         // [msec]
+  int frames_per_buffer_;   // [frame]
   int max_recording_time_;  // [msec]
   int min_top_silence_;     // [msec]
   int min_end_silence_;     // [msec]
@@ -649,6 +722,13 @@ JNIEXPORT void JNICALL Java_jp_ac_nitech_sp_voist_CallPortAudio_setSampleSize(
   }
 }
 
+JNIEXPORT void JNICALL Java_jp_ac_nitech_sp_voist_CallPortAudio_setNumChannels(
+    JNIEnv *, jobject, jint num) {
+  if (port_audio) {
+    port_audio->SetNumChannels(num);
+  }
+}
+
 JNIEXPORT void JNICALL
 Java_jp_ac_nitech_sp_voist_CallPortAudio_setSampleRateForBeep(JNIEnv *, jobject,
                                                               jint rate) {
@@ -662,6 +742,15 @@ Java_jp_ac_nitech_sp_voist_CallPortAudio_setSampleSizeForBeep(JNIEnv *, jobject,
                                                               jint size) {
   if (port_audio) {
     port_audio->SetSampleSizeForBeep(size);
+  }
+}
+
+JNIEXPORT void JNICALL
+Java_jp_ac_nitech_sp_voist_CallPortAudio_setNumChannelsForBeep(JNIEnv *,
+                                                               jobject,
+                                                               jint num) {
+  if (port_audio) {
+    port_audio->SetNumChannelsForBeep(num);
   }
 }
 
@@ -680,6 +769,15 @@ Java_jp_ac_nitech_sp_voist_CallPortAudio_setSampleSizeForSample(JNIEnv *,
                                                                 jint size) {
   if (port_audio) {
     port_audio->SetSampleSizeForSample(size);
+  }
+}
+
+JNIEXPORT void JNICALL
+Java_jp_ac_nitech_sp_voist_CallPortAudio_setNumChannelsForSample(JNIEnv *,
+                                                                 jobject,
+                                                                 jint num) {
+  if (port_audio) {
+    port_audio->SetNumChannelsForSample(num);
   }
 }
 
@@ -734,6 +832,11 @@ Java_jp_ac_nitech_sp_voist_CallPortAudio_getSampleSize(JNIEnv *, jobject) {
 }
 
 JNIEXPORT jint JNICALL
+Java_jp_ac_nitech_sp_voist_CallPortAudio_getNumChannels(JNIEnv *, jobject) {
+  return port_audio ? port_audio->GetNumChannels() : 0;
+}
+
+JNIEXPORT jint JNICALL
 Java_jp_ac_nitech_sp_voist_CallPortAudio_getSampleRateForBeep(JNIEnv *,
                                                               jobject) {
   return port_audio ? port_audio->GetSampleRateForBeep() : 0;
@@ -746,6 +849,12 @@ Java_jp_ac_nitech_sp_voist_CallPortAudio_getSampleSizeForBeep(JNIEnv *,
 }
 
 JNIEXPORT jint JNICALL
+Java_jp_ac_nitech_sp_voist_CallPortAudio_getNumChannelsForBeep(JNIEnv *,
+                                                               jobject) {
+  return port_audio ? port_audio->GetNumChannelsForBeep() : 0;
+}
+
+JNIEXPORT jint JNICALL
 Java_jp_ac_nitech_sp_voist_CallPortAudio_getSampleRateForSample(JNIEnv *,
                                                                 jobject) {
   return port_audio ? port_audio->GetSampleRateForSample() : 0;
@@ -755,6 +864,12 @@ JNIEXPORT jint JNICALL
 Java_jp_ac_nitech_sp_voist_CallPortAudio_getSampleSizeForSample(JNIEnv *,
                                                                 jobject) {
   return port_audio ? port_audio->GetSampleSizeForSample() : 0;
+}
+
+JNIEXPORT jint JNICALL
+Java_jp_ac_nitech_sp_voist_CallPortAudio_getNumChannelsForSample(JNIEnv *,
+                                                                 jobject) {
+  return port_audio ? port_audio->GetNumChannelsForSample() : 0;
 }
 
 JNIEXPORT jint JNICALL

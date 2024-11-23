@@ -208,8 +208,8 @@ public class RecordInfo {
     return Math.round((double) getFileLength() / 1024);
   }
 
-  public double getPlaybackTime(double sampleRate, double sampleSize) {
-    return (double) getFileLength() / (sampleRate * sampleSize);
+  public double getPlaybackTime(int sampleRate, int sampleSize, int numChannels) {
+    return (double) getFileLength() / (sampleRate * sampleSize * numChannels);
   }
 
   public String getFormatedTimeStamp() {

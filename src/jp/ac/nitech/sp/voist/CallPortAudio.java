@@ -57,13 +57,19 @@ public class CallPortAudio {
 
   public native void setSampleSize(int size);
 
+  public native void setNumChannels(int num);
+
   public native void setSampleRateForBeep(int rate);
 
   public native void setSampleSizeForBeep(int size);
 
+  public native void setNumChannelsForBeep(int size);
+
   public native void setSampleRateForSample(int rate);
 
   public native void setSampleSizeForSample(int size);
+
+  public native void setNumChannelsForSample(int size);
 
   public native void setMaxRecordingTime(int time);
 
@@ -80,13 +86,19 @@ public class CallPortAudio {
 
   public native int getSampleSize();
 
+  public native int getNumChannels();
+
   public native int getSampleRateForBeep();
 
   public native int getSampleSizeForBeep();
 
+  public native int getNumChannelsForBeep();
+
   public native int getSampleRateForSample();
 
   public native int getSampleSizeForSample();
+
+  public native int getNumChannelsForSample();
 
   public native int getMaxRecordingTime();
 

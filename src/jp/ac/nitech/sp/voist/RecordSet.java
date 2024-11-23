@@ -77,8 +77,16 @@ public class RecordSet {
   //
   private int sampleSize;
 
+  //
+  private int numChannels;
+
   public RecordSet(
-      String propertiesFileName, String saveDir, String appDir, int sampleRate, int sampleSize) {
+      String propertiesFileName,
+      String saveDir,
+      String appDir,
+      int sampleRate,
+      int sampleSize,
+      int numChannels) {
     Objects.requireNonNull(propertiesFileName);
     Objects.requireNonNull(saveDir);
     Objects.requireNonNull(appDir);
@@ -98,6 +106,7 @@ public class RecordSet {
     sampleDir = FileUtils.createPath(appDir, properties.getString("DIR_SAMPLE"));
     setSampleRate(sampleRate);
     setSampleSize(sampleSize);
+    setNumChannels(numChannels);
 
     prompts = new ArrayList<Prompt>(512);
     info = new ArrayList<RecordInfo>(512);
@@ -141,12 +150,20 @@ public class RecordSet {
     this.sampleSize = sampleSize;
   }
 
+  public void setNumChannels(final int numChannels) {
+    this.numChannels = numChannels;
+  }
+
   public int getSampleRate() {
     return sampleRate;
   }
 
   public int getSampleSize() {
     return sampleSize;
+  }
+
+  public int getNumChannels() {
+    return numChannels;
   }
 
   public boolean setPosition(int position) {
@@ -451,7 +468,7 @@ public class RecordSet {
     public VoiceFileWriter() {
       src = null;
       dest = null;
-      waveHeader = new WaveHeader(sampleRate, sampleSize, 1);
+      waveHeader = new WaveHeader(sampleRate, sampleSize, numChannels);
     }
 
     public void setSourceRecordInfo(RecordInfo info) {
