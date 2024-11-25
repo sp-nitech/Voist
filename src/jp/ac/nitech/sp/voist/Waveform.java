@@ -82,8 +82,9 @@ public class Waveform extends JPanel {
     yPoints = new int[numPoints];
   }
 
-  public boolean draw(String fileName, int fileLength, String promptId, int sampleSize) {
-    if (fileName == null || fileLength <= 0 || sampleSize <= 0) {
+  public boolean draw(
+      String fileName, int fileLength, String promptId, int sampleSize, int numChannels) {
+    if (fileName == null || fileLength <= 0 || sampleSize <= 0 || numChannels <= 0) {
       return false;
     }
 
@@ -95,11 +96,12 @@ public class Waveform extends JPanel {
       fc.read(bb);
       bb.rewind();
 
+      int dataSize = sampleSize * numChannels;
       int numPoints = xPoints.length;
-      int skip = fileLength / xPoints.length - sampleSize;
-      // Ensure 'skip' is a multiple of 'sampleSize'.
-      for (int i = 1; i < sampleSize; i++) {
-        if (skip % sampleSize == i) {
+      int skip = fileLength / xPoints.length - dataSize;
+      // Ensure 'skip' is a multiple of 'dataSize'.
+      for (int i = 1; i < dataSize; i++) {
+        if (skip % dataSize == i) {
           skip -= i;
           break;
         }

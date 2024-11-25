@@ -41,7 +41,10 @@
   - 1000Hz ～ 96000Hzまで対応しています．
 - ビットレートを変更したいです．
   - インストールされた`Voist/res/properties/system.Voist.properties`の`SAMPLE_SIZE`を変更してください．
-  - 2 (16bit), 3 (24bit), 4 (32bit)のみ対応しています．すべて整数型です．
+  - 2 (16bit), 3 (24bit), 4 (32bit) に対応しています．すべて整数型です．
+- ステレオで録音したいです．
+  - インストールされた`Voist/res/properties/system.Voist.properties`の`NUM_CHANNELS`を変更してください．
+  - 1（モノラル）, 2（ステレオ）に対応しています．
 - サンプル再生ボタンを隠したいです．
   - `res/properties/system.Buttons.properties`の`USE_SAMPLE`を`false`にしてください．
 - 音声合成器を作りたいです．
@@ -100,7 +103,7 @@
       1. Build wrapper（歯車のボタン）を実行する．
    1. `tools/wixedit/WixEdit-0.8.2712.17.msi`を実行してWixEditをインストールする．
    1. WixEditを起動してインストーラを作成する．
-      1. `package/res/wixedit.config.wxs`を開く．
+      1. `package/res/Voist.wxs`を開く．
       1. 『Build』→『Build MSI setup package』を実行する．
    1. インストーラ`package/bin/Voist.msi`を実行して動作確認する．
 1. 後処理

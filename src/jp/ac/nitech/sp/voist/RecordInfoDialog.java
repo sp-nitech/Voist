@@ -52,8 +52,11 @@ public class RecordInfoDialog extends JFrame {
   //
   private int sampleSize;
 
+  //
+  private int numChannels;
+
   public RecordInfoDialog(
-      String propertiesFileName, int sample_rate, int sample_size, ImageIcon icon) {
+      String propertiesFileName, int sampleRate, int sampleSize, int numChannels, ImageIcon icon) {
     Objects.requireNonNull(propertiesFileName);
     properties = new PropertiesIO(propertiesFileName);
     try {
@@ -97,8 +100,9 @@ public class RecordInfoDialog extends JFrame {
       panel.add(textAreas[i]);
     }
 
-    setSampleRate(sample_rate);
-    setSampleSize(sample_size);
+    setSampleRate(sampleRate);
+    setSampleSize(sampleSize);
+    setNumChannels(numChannels);
 
     final Container contentPane = getContentPane();
     contentPane.add(panel, BorderLayout.CENTER);
@@ -112,12 +116,20 @@ public class RecordInfoDialog extends JFrame {
     this.sampleSize = sampleSize;
   }
 
+  public void setNumChannels(final int numChannels) {
+    this.numChannels = numChannels;
+  }
+
   public int getSampleRate() {
     return sampleRate;
   }
 
   public int getSampleSize() {
     return sampleSize;
+  }
+
+  public int getNumChannels() {
+    return numChannels;
   }
 
   public void setProgress(final int now, final int max) {
@@ -142,7 +154,7 @@ public class RecordInfoDialog extends JFrame {
                 " " + properties.getString("TEXT_END_SIL") + "%02.1f s\n", log.getEndSilence())
             + String.format(
                 " " + properties.getString("TEXT_PLAYBACK_TIME") + "%02.1f s\n",
-                log.getPlaybackTime(sampleRate, sampleSize))
+                log.getPlaybackTime(sampleRate, sampleSize, numChannels))
             + String.format(
                 " " + properties.getString("TEXT_FILE_SIZE") + "%d kB", log.getFileSize());
 

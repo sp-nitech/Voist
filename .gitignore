@@ -1,8 +1,10 @@
+# Main
 bin/
 extern/CallPortAudio/src/jp_ac_nitech_sp_voist_CallPortAudio.h
 jre/
 res/ipadic/
 
+# Tools
 tools/ant/
 tools/igo/
 tools/java/
@@ -12,7 +14,11 @@ tools/mecab-ipadic/
 tools/portaudio/
 tools/wixedit/
 
+# Visual Studio
 .vs/
 x64/
 Win32/
 *.user
+
+# Java
+*.log
