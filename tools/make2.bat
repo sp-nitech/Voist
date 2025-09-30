@@ -24,7 +24,7 @@ if not exist mecab-ipadic (
 )
 
 if not exist ..\jre (
-    xcopy /e /i "C:\Program Files\Java\jdk-21" ..\jre
+    xcopy /e /i "C:\Program Files\Java\jdk-25" ..\jre
 )
 
 javac -h ..\extern\CallPortAudio\src -sourcepath ..\src -d ..\bin ..\src\jp\ac\nitech\sp\voist\CallPortAudio.java

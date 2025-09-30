@@ -1,5 +1,5 @@
 @echo off
 
-rmdir /s /q ant igo java launch4j llvm mecab-ipadic portaudio wixedit
+rmdir /s /q ant igo java launch4j llvm mecab-ipadic portaudio wixedit ..\jre
 
 pause

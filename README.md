@@ -62,7 +62,7 @@
    1. `git clone https://github.com/sp-nitech/Voist.git`
    1. `CallPortAudio.dll`と`portaudio_x64.dll`がシンボリックリンクになっているか確認する．
    1. `tools/`以下にある`make1.bat`を実行する．
-   1. `tools/java/jdk-21_windows-x64_bin.exe`を実行してJDKをインストールする（インストール先はデフォルトのまま）．
+   1. `tools/java/jdk-25_windows-x64_bin.exe`を実行してJDKをインストールする（インストール先はデフォルトのまま）．
    1. `tools/`以下にある`make2.bat`を実行する．
 1. ASIO SDKをダウンロード
    1. [Steinberg](https://www.steinberg.net/developers/)からASIO SDKをダウンロードする．
@@ -75,7 +75,6 @@
    1. ソリューション構成をDebugからReleaseに変更する．
    1. プラットフォームがx64になっているか確認する．
    1. 『プロジェクト』→『プロパティ』→『構成プロパティ』→『C/C++』を選択する．
-      1.  プラットフォームがx64になっているか確認する．
       1. 『最適化』→『フレームポイントなし』を『はい/(Oy)』にする．
       1. 『コード生成』→『ランタイムライブラリ』を『マルチスレッド(/MT)』にする．
       1. 『コード生成』→『浮動小数点モデル』を『Fast/(fp:fast)』にする．
@@ -88,9 +87,11 @@
 1. Voistをコンパイル
    1. [Eclipse Foundation](https://www.eclipse.org/downloads/)からEclipseのインストーラをダウンロードする．
    1. インストーラを実行する．
-   1. Eclipse IDE for Java Developersを選択して，そのままINSTALLボタンを押す．
+      1. Eclipse IDE for Java Developersを選択する．
+      1. Java VMの項目において前準備でインストールしたJavaのディレクトリを選択する．
+      1. INSTALLボタンを押す．
    1. Eclipseを起動する．Workspaceは任意で良い．
-   1. 『File』→『Open Projects from File System...』から，このリポジトリのルートディレクトリを指定する．
+   1. 『File』→『Open Projects from File System...』→『Directory』から，このリポジトリのルートディレクトリを指定する．
    1. 『Run』→『Run』で動作確認する．
 1. インストーラを作成
    1. Eclipseの『File』→『Export...』→『Java』→『Runnable JAR file』からJARファイルを出力する．
@@ -107,7 +108,7 @@
       1. 『Build』→『Build MSI setup package』を実行する．
    1. インストーラ`package/bin/Voist.msi`を実行して動作確認する．
 1. 後処理
-   1. `tools/llvm/LLVM-19.1.0-win64.exe`を実行して`clang-format`をインストールする．
+   1. `tools/llvm/LLVM-21.1.2-win64.exe`を実行して`clang-format`をインストールする．
    1. パスが通っているか（環境変数Pathに`C:\Program Files\LLVM\bin`があるか）をチェックする．
    1. `tools/`以下にある`format.bat`を実行する． 
 
